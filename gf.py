@@ -60,4 +60,5 @@ while True:
         p3 = rotate(p3, center, -theta)
         tri = pg.draw.polygon(screen, WHITE, [p1, p2, p3], 2)
 
+    print(p1, p2, p3)
     pg.display.flip()
