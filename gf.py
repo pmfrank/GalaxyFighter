@@ -2,7 +2,7 @@ import pygame as pg
 import pygame_ai as pgai
 from sys import exit
 import math
-from random import randint
+from random import randint, choices
 
 
 pg.init()
@@ -13,11 +13,17 @@ BLACK = (0, 0, 0)
 RIGHT = 5
 LEFT = -5
 
+font = pg.font.Font('freesansbold.ttf', 32)
+
 size = (320, 480)
 screen = pg.display.set_mode(size)
 
 clock = pg.time.Clock()
 FPS = 30
+score = 0
+
+kill = 10
+hit = 15
 
 p1 = (160, 215)
 p2 = (135, 265)
@@ -91,6 +97,15 @@ class EnemyShip(pgai.gameobject.GameObject):
         self.rect.move_ip(self.velocity)
 
 
+def game_over():
+    global eraser
+    screen.blit(eraser, (0, 0))
+    game_over_text = font.render('All Your Base\nR Belong 2 Us', True, RED, BLACK)
+    screen.blit(game_over_text, (0, 200))
+    pg.display.flip()
+    x = input('wait')
+
+
 fire = False
 bullet = None
 angle = 0
@@ -98,7 +113,7 @@ new_missile = None
 color = BLUE
 circle_list = list()
 
-while True:
+while score >= 0:
     clock.tick(FPS)
 
     if len(circle_list) < enemy_limit:
@@ -146,13 +161,32 @@ while True:
         for x, enemy in enumerate(circle_list):
             if enemy.rect.collidepoint(new_missile.pos):
                 circle_list.pop(x)
+                score += kill
     tri = pg.draw.polygon(screen, WHITE, [p1, p2, p3], 2)
     if len(circle_list) < enemy_limit:
+        for _ in range(1, randint(2, 10)):
+            pos = choices(
+                [
+                    (0, randint(0, 480)),
+                    (320, randint(0, 480)),
+                    (randint(0, 320), 0),
+                    (randint(0,320), 480)
+                ]
+            )
         circle = EnemyShip(pos=(randint(0, 360), 0))
         circle.ai = pgai.steering.kinematic.Arrive(circle, player)
         circle_list.append(circle)
 
-    for i in range(0, len(circle_list)):
-        circle_list[i].update(FPS)
-        screen.blit(circle_list[i].image, circle_list[i].rect)
+    for x, enemy in enumerate(circle_list):
+        enemy.update(15)
+        screen.blit(enemy.image, enemy.rect)
+        if enemy.rect.collidepoint(center):
+            circle_list.pop(x)
+            score -= hit
+    score_border = pg.draw.rect(screen, BLUE, [0, 0, 320, 40])
+    text = font.render(f'Score: {score}', True, WHITE, BLUE)
+    screen.blit(text,(0, 0))
     pg.display.flip()
+
+
+game_over()
