@@ -35,8 +35,8 @@ def rotaryDeal():
 			globalCounter = globalCounter - 1
 
 def btnISR(channel):
-	global globalCounter
-	globalCounter = 0
+	print('Fire')
+	time.sleep(0.01)
 
 def loop():
 	global globalCounter
@@ -45,8 +45,11 @@ def loop():
 	GPIO.add_event_detect(BtnPin, GPIO.FALLING, callback=btnISR)
 	while True:
 		rotaryDeal()
-		if tmp != globalCounter:
-			print 'globalCounter = %d' % globalCounter
+		if tmp > globalCounter:
+			print('Move Right')
+			tmp = globalCounter
+		elif tmp < globalCounter:
+			print('Move Left')
 			tmp = globalCounter
 
 def destroy():

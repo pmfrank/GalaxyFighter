@@ -4,6 +4,8 @@ from sys import exit
 import math
 from random import randint, choices
 
+import control
+
 
 pg.init()
 WHITE = (255, 255, 255)
@@ -113,6 +115,9 @@ new_missile = None
 color = BLUE
 circle_list = list()
 
+control = control
+
+
 while score >= 0:
     clock.tick(FPS)
 
@@ -184,9 +189,10 @@ while score >= 0:
             circle_list.pop(x)
             score -= hit
     score_border = pg.draw.rect(screen, BLUE, [0, 0, 320, 40])
-    text = font.render(f'Score: {score}', True, WHITE, BLUE)
+    text = font.render(f'Score: {score}', True, WHITE)
     screen.blit(text,(0, 0))
     pg.display.flip()
+
 
 
 game_over()
