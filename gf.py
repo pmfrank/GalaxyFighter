@@ -1,10 +1,13 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide'
+
 import pygame as pg
 import pygame_ai as pgai
 from sys import exit
 import math
 from random import randint, choices
 
-import control
+# import control
 
 
 pg.init()
@@ -102,7 +105,7 @@ class EnemyShip(pgai.gameobject.GameObject):
 def game_over():
     global eraser
     screen.blit(eraser, (0, 0))
-    game_over_text = font.render('All Your Base\nR Belong 2 Us', True, RED, BLACK)
+    game_over_text = font.render('All Your Base R Belong 2 Us', True, RED, BLACK)
     screen.blit(game_over_text, (0, 200))
     pg.display.flip()
     x = input('wait')
@@ -115,7 +118,7 @@ new_missile = None
 color = BLUE
 circle_list = list()
 
-control = control
+# control = control
 
 
 while score >= 0:
